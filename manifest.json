@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "shortcuts for org mode",
+  "version": "1.0",
+  "description": "some keybindings for org mode utilities",
+  "permissions": ["activeTab", "storage", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "commands": {
+    "save_title_and_url": {
+      "suggested_key": "Ctrl+Y",
+      "description": "Save the current page title and URL to org mode"
+    }
+  }
+}
