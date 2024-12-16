@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
       chrome.storage.sync.set({ blockedPatterns: patterns });
     }, 1000); // 1 second delay
   });
+
   document.addEventListener("keydown", function (event) {
     if (event.ctrlKey && event.key === "/") {
       event.preventDefault();
