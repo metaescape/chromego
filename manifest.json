@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "shortcuts for org mode",
+  "name": "chrome personal customization",
   "version": "1.0",
-  "description": "some keybindings for org mode utilities",
-  "permissions": ["activeTab", "storage", "scripting"],
+  "description": "some keybindings for org mode utilities and url redirection",
+  "permissions": ["activeTab", "storage", "scripting", "webNavigation"],
   "background": {
     "service_worker": "background.js"
   },
@@ -18,5 +18,7 @@
       "suggested_key": "Ctrl+Y",
       "description": "Save the current page title and URL to org mode"
     }
-  }
+  },
+  "options_page": "options.html",
+  "action": {}
 }
