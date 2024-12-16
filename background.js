@@ -31,18 +31,21 @@ let blockedPatternsRaw = "";
 let parsedBlockedPatterns = [];
 
 function parseBlockedPatterns(rawPatterns) {
-  return rawPatterns.split("\n").map((pattern) => {
-    const [patternStr, redirectUrl] = pattern
-      .split("->")
-      .map((str) => str.trim());
-    const absoluteRedirectUrl =
-      redirectUrl && redirectUrl.startsWith("http")
-        ? redirectUrl
-        : redirectUrl
-        ? `https://${redirectUrl}`
-        : "about:blank";
-    return { pattern: new RegExp(patternStr), redirect: absoluteRedirectUrl };
-  });
+  return rawPatterns
+    .split("\n")
+    .filter((pattern) => !pattern.trim().startsWith("#"))
+    .map((pattern) => {
+      const [patternStr, redirectUrl] = pattern
+        .split("->")
+        .map((str) => str.trim());
+      const absoluteRedirectUrl =
+        redirectUrl && redirectUrl.startsWith("http")
+          ? redirectUrl
+          : redirectUrl
+          ? `https://${redirectUrl}`
+          : "about:blank";
+      return { pattern: new RegExp(patternStr), redirect: absoluteRedirectUrl };
+    });
 }
 
 chrome.storage.sync.get("blockedPatterns", (data) => {
