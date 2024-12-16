@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "chrome personal customization",
+  "name": "Customized Chrome Utilities",
   "version": "1.0",
   "description": "some keybindings for org mode utilities and url redirection",
   "permissions": ["activeTab", "storage", "scripting", "webNavigation", "tabs"],
