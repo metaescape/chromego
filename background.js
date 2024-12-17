@@ -88,15 +88,17 @@ chrome.webNavigation.onBeforeNavigate.addListener(
       return rule.pattern.test(details.url);
     });
 
-    const embedPattern =
-      /(?:youtube\.com\/embed\/|vimeo\.com\/video\/|dailymotion\.com\/embed\/video\/)/;
+    // const embedPattern =
+    //   /(?:youtube\.com\/embed\/|vimeo\.com\/video\/|dailymotion\.com\/embed\/video\/|platform\.twitter\.com\/widgets\/)/;
+    // if (embedPattern.test(details.url)) {
+    //   console.log("Embedded video, not redirecting:", details.url);
+    //   return; // ignore embedded videos
+    // }
 
-    if (embedPattern.test(details.url)) {
-      console.log("Embedded video, not redirecting:", details.url);
-      return; // ignore embedded videos
-    }
-    console.log("Matched rule:", rule, "for url:", details.url);
-    if (rule) {
+    let frameId = details.frameId;
+
+    if (frameId == 0 && rule) {
+      console.log("Matched rule:", rule, "for url:", details.url);
       chrome.tabs.update(details.tabId, { url: rule.redirect });
     }
   },
