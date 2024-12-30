@@ -21,6 +21,8 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         width: 80%;
         max-width: 600px;
+        overflow-y: auto;
+        max-height: 90vh;
       }
       h1 {
         font-size: 24px;
@@ -29,7 +31,7 @@
       }
       textarea {
         width: 100%;
-        height: 600px;
+        height: 450px;
         font-size: 16px;
         padding: 10px;
         border: 1px solid #333;
@@ -44,6 +46,85 @@
         outline: none;
         box-shadow: 0 0 5px rgba(0, 120, 215, 0.5);
       }
+      .closed-urls {
+        margin-top: 20px;
+        max-height: 200px;
+        overflow-y: auto; /* Add scroll bar */
+        scrollbar-width: thin;
+        scrollbar-color: #555 #1e1e1e;
+      }
+      .closed-urls h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+      .closed-urls div {
+        /* Remove flex layout for vertical arrangement */
+        display: block;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 5px;
+        background: #2e2e2e;
+        position: relative;
+      }
+      .closed-urls a {
+        /* Ensure links take full width and are block elements */
+        display: block;
+        color: #1a73e8;
+        text-decoration: none;
+        margin-bottom: 5px;
+      }
+      .closed-urls a:hover {
+        text-decoration: underline;
+      }
+      .closed-urls span {
+        /* Display timestamp below the link */
+        display: block;
+        color: #a0a0a0;
+        font-size: 12px;
+        margin-bottom: 5px;
+      }
+      .closed-urls button {
+        /* Position the close button at the top-right corner */
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        border: none;
+        color: #ff5c5c;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .closed-urls button:hover {
+        color: #ff0000;
+      }
+      .closed-urls::-webkit-scrollbar {
+        width: 8px;
+      }
+      .closed-urls::-webkit-scrollbar-track {
+        background: #1e1e1e;
+        border-radius: 4px;
+      }
+      .closed-urls::-webkit-scrollbar-thumb {
+        background-color: #555; /* Dark gray */
+        border-radius: 4px;
+        border: 2px solid #1e1e1e;
+      }
+      textarea::-webkit-scrollbar {
+        width: 8px;
+      }
+      textarea::-webkit-scrollbar-track {
+        background: #1e1e1e;
+        border-radius: 4px;
+      }
+      textarea::-webkit-scrollbar-thumb {
+        background-color: #555; /* Dark gray */
+        border-radius: 4px;
+        border: 2px solid #1e1e1e;
+      }
+      textarea {
+        scrollbar-width: thin;
+        scrollbar-color: #555 #1e1e1e;
+      }
     </style>
   </head>
   <body>
@@ -53,6 +134,12 @@
         id="blockedPatterns"
         placeholder="Enter patterns, one per line"
       ></textarea>
+
+      <!-- New Section for Closed URLs -->
+      <div class="closed-urls">
+        <h2>Closed Tabs</h2>
+        <div id="closedTabs"></div>
+      </div>
     </div>
     <script src="options.js"></script>
   </body>

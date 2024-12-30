@@ -37,4 +37,69 @@ document.addEventListener("DOMContentLoaded", () => {
       chrome.storage.sync.set({ blockedPatterns: textarea.value });
     }
   });
+
+  const closedTabsDiv = document.getElementById("closedTabs");
+
+  // Function to format timestamp
+  function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleString("zh-CN"); // Specify Chinese locale
+  }
+
+  // Function to render closed URLs
+  function renderClosedUrls(closedUrls) {
+    closedTabsDiv.innerHTML = ""; // Clear existing list
+    closedUrls.forEach((item, index) => {
+      const urlElement = document.createElement("div");
+
+      const link = document.createElement("a");
+      link.href = item.url;
+      link.textContent = item.url;
+      link.target = "_blank";
+      link.style.color = "#1a73e8";
+      link.style.textDecoration = "none";
+
+      const timestamp = document.createElement("span");
+      timestamp.textContent = ` (${formatTimestamp(item.timestamp)})`;
+      timestamp.style.marginLeft = "10px";
+      timestamp.style.color = "#a0a0a0";
+      timestamp.style.fontSize = "12px";
+
+      const closeButton = document.createElement("button");
+      closeButton.textContent = "x";
+      closeButton.title = "Delete";
+      closeButton.addEventListener("click", () => {
+        deleteClosedUrl(index);
+      });
+
+      urlElement.appendChild(link);
+      urlElement.appendChild(timestamp);
+      urlElement.appendChild(closeButton);
+      closedTabsDiv.appendChild(urlElement);
+    });
+  }
+
+  // Function to delete a closed URL by index
+  function deleteClosedUrl(index) {
+    chrome.storage.local.get("closedUrls", (data) => {
+      let closedUrls = data.closedUrls || [];
+      closedUrls.splice(index, 1); // Remove the item at the specified index
+      chrome.storage.local.set({ closedUrls }, () => {
+        renderClosedUrls(closedUrls);
+      });
+    });
+  }
+
+  // Retrieve closed URLs from storage and render
+  chrome.storage.local.get("closedUrls", (data) => {
+    const closedUrls = data.closedUrls || [];
+    renderClosedUrls(closedUrls);
+  });
+
+  // Listen for updates to closedUrls and re-render
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === "local" && changes.closedUrls) {
+      renderClosedUrls(changes.closedUrls.newValue);
+    }
+  });
 });

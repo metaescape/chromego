@@ -3,7 +3,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     navigator.clipboard
       .writeText(request.text)
       .then(() => {
-        autoCloseAlert(`已复制到剪贴板: ${request.text}`, 2000);
+        autoCloseAlert(`${request.text}`, 2000);
       })
       .catch((err) => {});
   }
