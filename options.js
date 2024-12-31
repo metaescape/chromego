@@ -5,6 +5,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  chrome.storage.sync.get("maxTabs", (data) => {
+    if (data.maxTabs) {
+      document.getElementById("maxTabsInput").value = data.maxTabs;
+    }
+  });
+
   let timeout;
   document.getElementById("blockedPatterns").addEventListener("input", () => {
     clearTimeout(timeout);
@@ -12,6 +18,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const patterns = document.getElementById("blockedPatterns").value;
       chrome.storage.sync.set({ blockedPatterns: patterns });
     }, 1000); // 1 second delay
+  });
+
+  document.getElementById("maxTabsInput").addEventListener("input", () => {
+    const maxTabsValue = document.getElementById("maxTabsInput").value;
+    chrome.storage.sync.set({ maxTabs: maxTabsValue });
   });
 
   document.addEventListener("keydown", function (event) {
@@ -51,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     closedTabsDiv.innerHTML = ""; // Clear existing list
     closedUrls.forEach((item, index) => {
       const urlElement = document.createElement("div");
+      urlElement.className = "tabs";
 
       const link = document.createElement("a");
       link.href = item.url;

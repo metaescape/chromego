@@ -1,3 +1,18 @@
+let maxTabs = 6;
+
+// Retrieve initially
+chrome.storage.sync.get("maxTabs", (data) => {
+  if (data.maxTabs) {
+    maxTabs = parseInt(data.maxTabs, 10);
+  }
+});
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "sync" && changes.maxTabs) {
+    maxTabs = parseInt(changes.maxTabs.newValue, 10);
+  }
+});
+
 chrome.commands.onCommand.addListener((command) => {
   if (command === "save_title_and_url") {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -103,7 +118,6 @@ chrome.webNavigation.onBeforeNavigate.addListener(
     }
 
     chrome.tabs.query({}, (tabs) => {
-      const maxTabs = 6;
       if (tabs.length > maxTabs) {
         chrome.tabs.remove(details.tabId);
         chrome.tabs.query(

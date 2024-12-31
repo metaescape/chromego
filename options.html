@@ -19,14 +19,14 @@
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        width: 80%;
-        max-width: 600px;
-        overflow-y: auto;
-        max-height: 90vh;
+        width: 90%;
+        max-width: 650px;
+
+        /* max-height: 95vh; */
       }
       h1 {
         font-size: 24px;
-        margin-bottom: 20px;
+        /* margin-bottom: 20px; */
         color: #e0e0e0;
       }
       textarea {
@@ -48,19 +48,20 @@
       }
       .closed-urls {
         margin-top: 20px;
-        max-height: 200px;
-        overflow-y: auto; /* Add scroll bar */
-        scrollbar-width: thin;
-        scrollbar-color: #555 #1e1e1e;
       }
       .closed-urls h2 {
         font-size: 20px;
         margin-bottom: 10px;
       }
-      .closed-urls div {
+      #closedTabs {
+        max-height: 300px;
+        overflow-y: auto; /* Add scroll bar */
+        scrollbar-width: thin;
+        scrollbar-color: #555 #1e1e1e;
+      }
+      .closed-urls .tabs {
         /* Remove flex layout for vertical arrangement */
-        display: block;
-        padding: 10px;
+        padding: 5px;
         border-radius: 4px;
         margin-bottom: 5px;
         background: #2e2e2e;
@@ -125,6 +126,28 @@
         scrollbar-width: thin;
         scrollbar-color: #555 #1e1e1e;
       }
+      .maxTabsContainer {
+        display: flex;
+        align-items: center;
+
+        border-radius: 4px;
+        padding: 10px;
+        margin-bottom: 10px;
+        height: 40px;
+      }
+      .maxTabsContainer h2 {
+        margin: 0;
+        margin-right: 10px;
+      }
+      .maxTabsContainer input {
+        width: 50px;
+        height: 20px;
+        padding: 5px;
+        border: 1px solid #7e7e7e;
+        border-radius: 4px;
+        background-color: #2e2e2e;
+        color: #eeeded;
+      }
     </style>
   </head>
   <body>
@@ -137,7 +160,15 @@
 
       <!-- New Section for Closed URLs -->
       <div class="closed-urls">
-        <h2>Closed Tabs</h2>
+        <div class="maxTabsContainer">
+          <h2>Closed Tabs</h2>
+          <input
+            type="number"
+            id="maxTabsInput"
+            placeholder="Set Max Tabs"
+            value="6"
+          />
+        </div>
         <div id="closedTabs"></div>
       </div>
     </div>
