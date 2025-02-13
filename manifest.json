@@ -18,6 +18,10 @@
     "save_title_and_url": {
       "suggested_key": "Ctrl+Y",
       "description": "Save the current page title and URL to org mode"
+    },
+    "google_search": {
+      "suggested_key": "Ctrl+G",
+      "description": "Search the selected text with google"
     }
   },
   "options_page": "options.html",

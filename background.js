@@ -35,6 +35,27 @@ chrome.commands.onCommand.addListener((command) => {
         }
       );
     });
+  } else if (command === "google_search") {
+    // 获取当前标签页，然后在标签页中执行脚本获取选中文本
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tabId = tabs[0].id;
+      chrome.scripting.executeScript(
+        {
+          target: { tabId: tabId },
+          function: () => window.getSelection().toString(),
+        },
+        (results) => {
+          let selectedText = results[0].result;
+          console.log("Selected text:", selectedText);
+          if (selectedText) {
+            let query = encodeURIComponent(selectedText);
+            chrome.tabs.create({
+              url: `https://www.google.com/search?q=${query}`,
+            });
+          }
+        }
+      );
+    });
   }
 });
 
