@@ -1,23 +1,60 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Function to check if the current time is between 12 PM and 1 PM
+  function isTimeInAllowedRange() {
+    const now = new Date();
+    const currentHour = now.getHours();
+    return currentHour >= 12 && currentHour < 13;
+  }
+
+  const textarea = document.getElementById("blockedPatterns");
+
+  // Function to enforce the removal of '#' at the beginning of each line
+  function enforcePattern(text) {
+    const lines = text.split("\n");
+    const processedLines = lines.map((line) => {
+      if (line.startsWith("#")) {
+        return line.substring(1).trimStart();
+      }
+      return line;
+    });
+    return processedLines.join("\n");
+  }
+
+  // Initial setup and check
   chrome.storage.sync.get("blockedPatterns", (data) => {
     if (data.blockedPatterns) {
-      document.getElementById("blockedPatterns").value = data.blockedPatterns;
+      textarea.value = data.blockedPatterns;
+      textarea.value = enforcePattern(textarea.value);
     }
+  });
+
+  // Disable textarea if not in the allowed time range
+  if (!isTimeInAllowedRange()) {
+    textarea.disabled = true;
+    textarea.placeholder =
+      "This field is only editable between 12 PM and 1 PM.";
+  }
+
+  // Event listener for input changes
+  let timeout;
+  textarea.addEventListener("input", () => {
+    if (!isTimeInAllowedRange()) {
+      return; // Do nothing if not in the allowed time range
+    }
+
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      let patterns = textarea.value;
+      patterns = enforcePattern(patterns); // Enforce pattern
+      textarea.value = patterns; // Update textarea with enforced patterns
+      chrome.storage.sync.set({ blockedPatterns: patterns });
+    }, 1000); // 1 second delay
   });
 
   chrome.storage.sync.get("maxTabs", (data) => {
     if (data.maxTabs) {
       document.getElementById("maxTabsInput").value = data.maxTabs;
     }
-  });
-
-  let timeout;
-  document.getElementById("blockedPatterns").addEventListener("input", () => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      const patterns = document.getElementById("blockedPatterns").value;
-      chrome.storage.sync.set({ blockedPatterns: patterns });
-    }, 1000); // 1 second delay
   });
 
   document.getElementById("maxTabsInput").addEventListener("input", () => {
