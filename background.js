@@ -1,3 +1,4 @@
+import { isTimeInAllowedRange } from "./utils.js";
 let maxTabs = 6;
 
 // Retrieve initially
@@ -71,8 +72,17 @@ function parseBlockedPatterns(rawPatterns) {
   currentTarget = "about:blank"; // Reset currentTarget at the start of parsing
   return rawPatterns
     .split("\n")
+    .map((pattern) => pattern.trim())
     .filter((pattern) => {
-      return pattern.trim() !== "" && !pattern.trim().startsWith("#");
+      if (pattern === "") {
+        return false;
+      } else if (isTimeInAllowedRange() && pattern.startsWith("#")) {
+        return false;
+      }
+      return true;
+    })
+    .map((pattern) => {
+      return pattern.replace(/^#+\s*/, "");
     })
     .map((pattern) => {
       const [patternStr, redirectUrl] = pattern
