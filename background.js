@@ -128,26 +128,28 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
   }
 });
 
+chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
+  const rule = parsedBlockedPatterns.find((rule) => {
+    return rule.pattern.test(details.url);
+  });
+
+  // const embedPattern =
+  //   /(?:youtube\.com\/embed\/|vimeo\.com\/video\/|dailymotion\.com\/embed\/video\/|platform\.twitter\.com\/widgets\/)/;
+  // if (embedPattern.test(details.url)) {
+  //   console.log("Embedded video, not redirecting:", details.url);
+  //   return; // ignore embedded videos
+  // }
+
+  let frameId = details.frameId;
+
+  if (frameId == 0 && rule) {
+    console.log("Matched rule:", rule, "for url:", details.url);
+    chrome.tabs.update(details.tabId, { url: rule.redirect });
+  }
+});
+
 chrome.webNavigation.onBeforeNavigate.addListener(
   (details) => {
-    const rule = parsedBlockedPatterns.find((rule) => {
-      return rule.pattern.test(details.url);
-    });
-
-    // const embedPattern =
-    //   /(?:youtube\.com\/embed\/|vimeo\.com\/video\/|dailymotion\.com\/embed\/video\/|platform\.twitter\.com\/widgets\/)/;
-    // if (embedPattern.test(details.url)) {
-    //   console.log("Embedded video, not redirecting:", details.url);
-    //   return; // ignore embedded videos
-    // }
-
-    let frameId = details.frameId;
-
-    if (frameId == 0 && rule) {
-      console.log("Matched rule:", rule, "for url:", details.url);
-      chrome.tabs.update(details.tabId, { url: rule.redirect });
-    }
-
     chrome.tabs.query({}, (tabs) => {
       if (tabs.length > maxTabs) {
         chrome.tabs.remove(details.tabId);

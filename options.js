@@ -122,6 +122,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // clear al closed urls
+  document.getElementById("clearAll").addEventListener("click", () => {
+    chrome.storage.local.set({ closedUrls: [] }, () => {
+      closedTabsDiv.innerHTML = "";
+    });
+  });
+
   // Retrieve closed URLs from storage and render
   chrome.storage.local.get("closedUrls", (data) => {
     const closedUrls = data.closedUrls || [];

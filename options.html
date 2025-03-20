@@ -84,7 +84,7 @@
         font-size: 12px;
         margin-bottom: 5px;
       }
-      .closed-urls button {
+      #closedTabs button {
         /* Position the close button at the top-right corner */
         position: absolute;
         top: 10px;
@@ -95,7 +95,7 @@
         cursor: pointer;
         font-size: 16px;
       }
-      .closed-urls button:hover {
+      #closedTabs button:hover {
         color: #ff0000;
       }
       .closed-urls::-webkit-scrollbar {
@@ -148,6 +148,14 @@
         background-color: #2e2e2e;
         color: #eeeded;
       }
+      #clearAll {
+        position: relative;
+        padding: 5px;
+        border-radius: 4px;
+        padding: 5px 10px;
+        cursor: pointer;
+        margin-left: 10px;
+      }
     </style>
   </head>
   <body>
@@ -168,6 +176,7 @@
             placeholder="Set Max Tabs"
             value="6"
           />
+          <button id="clearAll">Clear All</button>
         </div>
         <div id="closedTabs"></div>
       </div>
