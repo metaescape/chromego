@@ -112,23 +112,7 @@ function getAbsoluteUrl(url) {
   return `https://${url}`;
 }
 
-chrome.storage.sync.get("blockedPatterns", (data) => {
-  if (data.blockedPatterns) {
-    blockedPatternsRaw = data.blockedPatterns;
-    parsedBlockedPatterns = parseBlockedPatterns(blockedPatternsRaw);
-    console.log("Initial parsedBlockedPatterns:", parsedBlockedPatterns);
-  }
-});
-
-chrome.storage.onChanged.addListener((changes, namespace) => {
-  if (changes.blockedPatterns) {
-    blockedPatternsRaw = changes.blockedPatterns.newValue;
-    parsedBlockedPatterns = parseBlockedPatterns(blockedPatternsRaw);
-    console.log("Updated parsedBlockedPatterns:", parsedBlockedPatterns);
-  }
-});
-
-chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
+function checkAndRedirect(details) {
   const rule = parsedBlockedPatterns.find((rule) => {
     return rule.pattern.test(details.url);
   });
@@ -146,10 +130,31 @@ chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
     console.log("Matched rule:", rule, "for url:", details.url);
     chrome.tabs.update(details.tabId, { url: rule.redirect });
   }
+}
+
+chrome.storage.sync.get("blockedPatterns", (data) => {
+  if (data.blockedPatterns) {
+    blockedPatternsRaw = data.blockedPatterns;
+    parsedBlockedPatterns = parseBlockedPatterns(blockedPatternsRaw);
+    console.log("Initial parsedBlockedPatterns:", parsedBlockedPatterns);
+  }
+});
+
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (changes.blockedPatterns) {
+    blockedPatternsRaw = changes.blockedPatterns.newValue;
+    parsedBlockedPatterns = parseBlockedPatterns(blockedPatternsRaw);
+    console.log("Updated parsedBlockedPatterns:", parsedBlockedPatterns);
+  }
+});
+
+chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
+  checkAndRedirect(details);
 });
 
 chrome.webNavigation.onBeforeNavigate.addListener(
   (details) => {
+    checkAndRedirect(details);
     chrome.tabs.query({}, (tabs) => {
       if (tabs.length > maxTabs) {
         chrome.tabs.remove(details.tabId);
