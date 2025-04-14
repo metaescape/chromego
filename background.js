@@ -14,6 +14,41 @@ chrome.storage.onChanged.addListener((changes, area) => {
   }
 });
 
+let lastVisitedTabId = null;
+let currentActiveTabId = null;
+
+// 在插件启动时获取当前激活的标签页 ID
+chrome.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+  if (tabs && tabs.length > 0) {
+    currentActiveTabId = tabs[0].id;
+  }
+});
+
+// 监听标签页被激活（切换）的事件
+chrome.tabs.onActivated.addListener(function (activeInfo) {
+  const newlyActivatedTabId = activeInfo.tabId;
+
+  // 在切换发生时，当前的 currentActiveTabId 就是切换前的 tab
+  if (
+    currentActiveTabId !== null &&
+    currentActiveTabId !== newlyActivatedTabId
+  ) {
+    lastVisitedTabId = currentActiveTabId;
+  }
+  // 更新 currentActiveTabId 为新激活的 tab
+  currentActiveTabId = newlyActivatedTabId;
+});
+
+// 可选：监听标签页关闭的事件，如果需要清除或处理相关 ID
+chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
+  if (tabId === lastVisitedTabId) {
+    lastVisitedTabId = null;
+  }
+  if (tabId === currentActiveTabId) {
+    currentActiveTabId = null;
+  }
+});
+
 chrome.commands.onCommand.addListener((command) => {
   if (command === "save_title_and_url") {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -57,6 +92,31 @@ chrome.commands.onCommand.addListener((command) => {
         }
       );
     });
+  } else if (command === "toggle_last_tab") {
+    // jump to lastVisitedTabId
+    chrome.tabs
+      .query({ active: true, currentWindow: true })
+      .then((currentTabs) => {
+        let currentTabId = null;
+        if (currentTabs && currentTabs.length > 0) {
+          currentTabId = currentTabs[0].id;
+        }
+
+        if (lastVisitedTabId) {
+          chrome.tabs.update(lastVisitedTabId, { active: true });
+        } else {
+          // to first tab
+          chrome.tabs.query({ currentWindow: true }).then((allTabs) => {
+            if (allTabs.length > 0) {
+              chrome.tabs.update(allTabs[0].id, { active: true });
+            }
+          });
+        }
+        lastVisitedTabId = currentTabId; // 更新 lastVisitedTabId
+      })
+      .catch((error) => {
+        console.error("查询标签页时发生错误:", error);
+      });
   }
 });
 
