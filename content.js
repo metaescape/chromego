@@ -1,11 +1,9 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.text) {
-    navigator.clipboard
-      .writeText(request.text)
-      .then(() => {
-        autoCloseAlert(`${request.text}`, 2000);
-      })
-      .catch((err) => {});
+    autoCloseAlert(`${request.text}`, 2000);
+    if (request.copy) {
+      navigator.clipboard.writeText(request.text).catch((err) => {});
+    }
   }
 });
 

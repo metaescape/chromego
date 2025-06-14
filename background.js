@@ -1,5 +1,5 @@
 import { isTimeInAllowedRange } from "./utils.js";
-let maxTabs = 6;
+let maxTabs = 10;
 
 // Retrieve initially
 chrome.storage.sync.get("maxTabs", (data) => {
@@ -67,6 +67,7 @@ chrome.commands.onCommand.addListener((command) => {
         () => {
           chrome.tabs.sendMessage(tab.id, {
             text: `[[${data.url}][${data.title}]]`,
+            copy: true,
           });
         }
       );
@@ -188,7 +189,17 @@ function checkAndRedirect(details) {
 
   if (frameId == 0 && rule) {
     console.log("Matched rule:", rule, "for url:", details.url);
-    chrome.tabs.update(details.tabId, { url: rule.redirect });
+
+    setTimeout(() => {
+      chrome.tabs.sendMessage(details.tabId, {
+        text: `this site url is in the block list`,
+      });
+    }, 5000);
+    // setTimeout(() => {
+    //   chrome.tabs.update(details.tabId, { url: rule.redirect });
+    // }, 20000);
+
+    // chrome.tabs.update(details.tabId, { url: rule.redirect });
   }
 }
 
