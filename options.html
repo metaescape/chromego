@@ -160,7 +160,15 @@
   </head>
   <body>
     <div class="container">
-      <h1>Rules</h1>
+      <div style="display: flex; align-items: center; margin-bottom: 10px">
+        <input
+          type="checkbox"
+          id="enableRules"
+          style="margin-right: 8px"
+          checked
+        />
+        <label for="enableRules" style="user-select: none">Enable Rules</label>
+      </div>
       <textarea
         id="blockedPatterns"
         placeholder="Enter patterns, one per line"

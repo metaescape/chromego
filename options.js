@@ -15,8 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Disable textarea if not in the allowed time range
   if (!isTimeInAllowedRange()) {
     textarea.disabled = true;
-    textarea.placeholder =
-      "This field is only editable between 12 PM and 1 PM.";
   }
 
   // Event listener for input changes
@@ -43,6 +41,16 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("maxTabsInput").addEventListener("input", () => {
     const maxTabsValue = document.getElementById("maxTabsInput").value;
     chrome.storage.sync.set({ maxTabs: maxTabsValue });
+  });
+
+  chrome.storage.sync.get("enableRules", (data) => {
+    if (data.enableRules !== undefined) {
+      document.getElementById("enableRules").checked = data.enableRules;
+    }
+  });
+
+  document.getElementById("enableRules").addEventListener("change", (event) => {
+    chrome.storage.sync.set({ enableRules: event.target.checked });
   });
 
   document.addEventListener("keydown", function (event) {

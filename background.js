@@ -1,5 +1,7 @@
 import { isTimeInAllowedRange } from "./utils.js";
 let maxTabs = 10;
+let enableRules = false; // Default value, can be changed in options
+let count = 0;
 
 // Retrieve initially
 chrome.storage.sync.get("maxTabs", (data) => {
@@ -137,13 +139,10 @@ function parseBlockedPatterns(rawPatterns) {
     .filter((pattern) => {
       if (pattern === "") {
         return false;
-      } else if (isTimeInAllowedRange() && pattern.startsWith("#")) {
+      } else if (pattern.startsWith("#")) {
         return false;
       }
       return true;
-    })
-    .map((pattern) => {
-      return pattern.replace(/^#+\s*/, "");
     })
     .map((pattern) => {
       const [patternStr, redirectUrl] = pattern
@@ -174,6 +173,11 @@ function getAbsoluteUrl(url) {
 }
 
 function checkAndRedirect(details) {
+  // get checkbox value
+  chrome.storage.sync.get("enableRules", (data) => {
+    enableRules = data.enableRules;
+  });
+
   const rule = parsedBlockedPatterns.find((rule) => {
     return rule.pattern.test(details.url);
   });
@@ -186,18 +190,19 @@ function checkAndRedirect(details) {
   // }
 
   let frameId = details.frameId;
+  count = count + 1;
 
   if (frameId == 0 && rule) {
     console.log("Matched rule:", rule, "for url:", details.url);
-
-    setTimeout(() => {
-      chrome.tabs.sendMessage(details.tabId, {
-        text: `this site url is in the block list`,
-      });
-    }, 5000);
-    // setTimeout(() => {
-    //   chrome.tabs.update(details.tabId, { url: rule.redirect });
-    // }, 20000);
+    if (enableRules) {
+      chrome.tabs.update(details.tabId, { url: rule.redirect });
+    } else {
+      setTimeout(() => {
+        chrome.tabs.sendMessage(details.tabId, {
+          text: `blocked url has been opend ${count} times`,
+        });
+      }, 5000);
+    }
 
     // chrome.tabs.update(details.tabId, { url: rule.redirect });
   }
