@@ -95,11 +95,15 @@ function injectStyles(css) {
 }
 
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "sync" && changes.enableRules) {
-    applySettings(changes.enableRules.newValue);
+  if (area === "sync") {
+    applySettings(changes.enableRules ? changes.enableRules.newValue : false);
   }
 });
 
-chrome.tabs.onActivated.addListener(function (activeInfo) {
-  applySettings(changes.enableRules.newValue);
+// after dom loaded
+document.addEventListener("DOMContentLoaded", () => {
+  chrome.storage.sync.get(["enableRules"], function (result) {
+    const settings = result.enableRules || false;
+    applySettings(settings);
+  });
 });
