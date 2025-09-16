@@ -1,0 +1,154 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 450px;
+  background-color: #121212;
+  color: #e0e0e0;
+}
+.container {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 650px;
+
+  /* max-height: 95vh; */
+}
+h1 {
+  font-size: 24px;
+  /* margin-bottom: 20px; */
+  color: #e0e0e0;
+}
+textarea {
+  width: 100%;
+  height: 450px;
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  resize: none;
+  box-sizing: border-box;
+  background-color: #2e2e2e;
+  color: #e0e0e0;
+}
+textarea:focus {
+  border-color: #0078d7;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 120, 215, 0.5);
+}
+.closed-urls {
+  margin-top: 20px;
+}
+.closed-urls h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+#closedTabs {
+  max-height: 300px;
+  overflow-y: auto; /* Add scroll bar */
+  scrollbar-width: thin;
+  scrollbar-color: #555 #1e1e1e;
+}
+.closed-urls .tabs {
+  /* Remove flex layout for vertical arrangement */
+  padding: 5px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  background: #2e2e2e;
+  position: relative;
+}
+.closed-urls a {
+  /* Ensure links take full width and are block elements */
+  display: block;
+  color: #1a73e8;
+  text-decoration: none;
+  margin-bottom: 5px;
+}
+.closed-urls a:hover {
+  text-decoration: underline;
+}
+.closed-urls span {
+  /* Display timestamp below the link */
+  display: block;
+  color: #a0a0a0;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+#closedTabs button {
+  /* Position the close button at the top-right corner */
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #ff5c5c;
+  cursor: pointer;
+  font-size: 16px;
+}
+#closedTabs button:hover {
+  color: #ff0000;
+}
+.closed-urls::-webkit-scrollbar {
+  width: 8px;
+}
+.closed-urls::-webkit-scrollbar-track {
+  background: #1e1e1e;
+  border-radius: 4px;
+}
+.closed-urls::-webkit-scrollbar-thumb {
+  background-color: #555; /* Dark gray */
+  border-radius: 4px;
+  border: 2px solid #1e1e1e;
+}
+textarea::-webkit-scrollbar {
+  width: 8px;
+}
+textarea::-webkit-scrollbar-track {
+  background: #1e1e1e;
+  border-radius: 4px;
+}
+textarea::-webkit-scrollbar-thumb {
+  background-color: #555; /* Dark gray */
+  border-radius: 4px;
+  border: 2px solid #1e1e1e;
+}
+textarea {
+  scrollbar-width: thin;
+  scrollbar-color: #555 #1e1e1e;
+}
+.maxTabsContainer {
+  display: flex;
+  align-items: center;
+
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+  height: 40px;
+}
+.maxTabsContainer h2 {
+  margin: 0;
+  margin-right: 10px;
+}
+.maxTabsContainer input {
+  width: 50px;
+  height: 20px;
+  padding: 5px;
+  border: 1px solid #7e7e7e;
+  border-radius: 4px;
+  background-color: #2e2e2e;
+  color: #eeeded;
+}
+#clearAll {
+  position: relative;
+  padding: 5px;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: 10px;
+}

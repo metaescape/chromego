@@ -13,6 +13,19 @@
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"]
+    },
+    {
+      "matches": ["*://*.bilibili.com/*"],
+      "js": ["bilibili.js"],
+      "run_at": "document_start"
+    },
+    {
+      "all_frames": true,
+      "matches": ["https://www.youtube.com/*", "https://m.youtube.com/*"],
+      "css": ["youtube.css"],
+      "js": ["youtube.js"],
+
+      "run_at": "document_start"
     }
   ],
   "commands": {
@@ -29,6 +42,7 @@
       "description": "Toggle to the last opened tab"
     }
   },
-  "options_page": "options.html",
-  "action": {}
+  "action": {
+    "default_popup": "popup.html"
+  }
 }

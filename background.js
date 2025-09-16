@@ -1,7 +1,6 @@
 import { isTimeInAllowedRange } from "./utils.js";
 let maxTabs = 10;
 let enableRules = false; // Default value, can be changed in options
-let count = 0;
 
 // Retrieve initially
 chrome.storage.sync.get("maxTabs", (data) => {
@@ -190,20 +189,12 @@ function checkAndRedirect(details) {
   // }
 
   let frameId = details.frameId;
-  count = count + 1;
 
   if (frameId == 0 && rule) {
     console.log("Matched rule:", rule, "for url:", details.url);
     if (enableRules) {
       chrome.tabs.update(details.tabId, { url: rule.redirect });
-    } else {
-      setTimeout(() => {
-        chrome.tabs.sendMessage(details.tabId, {
-          text: `blocked url has been opend ${count} times`,
-        });
-      }, 5000);
     }
-
     // chrome.tabs.update(details.tabId, { url: rule.redirect });
   }
 }
