@@ -43,5 +43,8 @@
   },
   "action": {
     "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "terminal.png"
   }
 }

@@ -2,9 +2,6 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
   width: 450px;
   background-color: #121212;
@@ -17,8 +14,20 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   width: 90%;
   max-width: 650px;
-
+  display: flex;
+  flex-direction: column;
   /* max-height: 95vh; */
+}
+.rule-checkbox {
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+#enableRules {
+  margin-right: 8px;
+  width: 18px;
+  height: 18px;
 }
 h1 {
   font-size: 24px;
