@@ -3,15 +3,27 @@ let maxTabs = 10;
 let enableRules = false; // Default value, can be changed in options
 
 // Retrieve initially
-chrome.storage.sync.get("maxTabs", (data) => {
+chrome.storage.local.get("maxTabs", (data) => {
   if (data.maxTabs) {
     maxTabs = parseInt(data.maxTabs, 10);
   }
 });
 
+// initialize icon
+chrome.storage.local.get("enableRules", (data) => {
+  if (data.enableRules !== undefined) {
+    enableRules = data.enableRules;
+    updateIcon(enableRules);
+  }
+});
+
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "sync" && changes.maxTabs) {
+  if (area === "local" && changes.maxTabs) {
     maxTabs = parseInt(changes.maxTabs.newValue, 10);
+  }
+  if (area === "local" && changes.enableRules) {
+    enableRules = changes.enableRules.newValue;
+    updateIcon(enableRules);
   }
 });
 
@@ -73,27 +85,10 @@ chrome.commands.onCommand.addListener((command) => {
         }
       );
     });
-  } else if (command === "google_search") {
-    // 获取当前标签页，然后在标签页中执行脚本获取选中文本
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const tabId = tabs[0].id;
-      chrome.scripting.executeScript(
-        {
-          target: { tabId: tabId },
-          function: () => window.getSelection().toString(),
-        },
-        (results) => {
-          let selectedText = results[0].result;
-          console.log("Selected text:", selectedText);
-          if (selectedText) {
-            let query = encodeURIComponent(selectedText);
-            chrome.tabs.create({
-              url: `https://www.google.com/search?q=${query}`,
-            });
-          }
-        }
-      );
-    });
+  } else if (command === "enable_rule") {
+    chrome.storage.local.set({ enableRules: true });
+    updateIcon(true);
+    chrome.action.openPopup();
   } else if (command === "toggle_last_tab") {
     // jump to lastVisitedTabId
     chrome.tabs
@@ -173,7 +168,7 @@ function getAbsoluteUrl(url) {
 
 function checkAndRedirect(details) {
   // get checkbox value
-  chrome.storage.sync.get("enableRules", (data) => {
+  chrome.storage.local.get("enableRules", (data) => {
     enableRules = data.enableRules;
   });
 
@@ -199,7 +194,7 @@ function checkAndRedirect(details) {
   }
 }
 
-chrome.storage.sync.get("blockedPatterns", (data) => {
+chrome.storage.local.get("blockedPatterns", (data) => {
   if (data.blockedPatterns) {
     blockedPatternsRaw = data.blockedPatterns;
     parsedBlockedPatterns = parseBlockedPatterns(blockedPatternsRaw);
@@ -259,3 +254,15 @@ chrome.webNavigation.onBeforeNavigate.addListener(
   },
   { url: [{ urlMatches: ".*" }] }
 );
+
+function updateIcon(isEnabled) {
+  const iconPath = isEnabled
+    ? "icons/terminal_activate.png"
+    : "icons/terminal_inactivate.png";
+
+  chrome.action.setIcon({
+    path: {
+      16: iconPath,
+    },
+  });
+}

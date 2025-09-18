@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Customized Chrome Utilities",
+  "name": "Chromego",
   "version": "1.0",
-  "description": "some keybindings for org mode utilities and url redirection",
+  "description": "some keybindings for org mode utilities and url redirection, hide youtube and bilibili non-main frame cotent",
   "permissions": ["activeTab", "storage", "scripting", "webNavigation", "tabs"],
   "host_permissions": ["<all_urls>"],
   "background": {
@@ -32,9 +32,9 @@
       "suggested_key": "Ctrl+Y",
       "description": "Save the current page title and URL to org mode"
     },
-    "google_search": {
-      "suggested_key": "Ctrl+G",
-      "description": "Search the selected text with google"
+    "enable_rule": {
+      "suggested_key": "Alt+X",
+      "description": "enable rule"
     },
     "toggle_last_tab": {
       "suggested_key": "Alt+Tab",
@@ -43,8 +43,5 @@
   },
   "action": {
     "default_popup": "popup.html"
-  },
-  "icons": {
-    "16": "icons/terminal_activate.png"
   }
 }

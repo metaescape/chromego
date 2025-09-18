@@ -7,7 +7,7 @@ function applyYouTubeSettings(enabled) {
 }
 
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "sync") {
+  if (area === "local") {
     // get html element
     applyYouTubeSettings(changes.enableRules.newValue);
   }
@@ -15,7 +15,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
 
 // after dom loaded
 document.addEventListener("DOMContentLoaded", () => {
-  chrome.storage.sync.get(["enableRules"], function (result) {
+  chrome.storage.local.get(["enableRules"], function (result) {
     const settings = result.enableRules || false;
     applyYouTubeSettings(settings);
   });

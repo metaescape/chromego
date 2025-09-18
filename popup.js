@@ -1,21 +1,20 @@
 import { isTimeInAllowedRange } from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  chrome.storage.sync.get("enableRules", (data) => {
+  chrome.storage.local.get("enableRules", (data) => {
     if (data.enableRules !== undefined) {
       document.getElementById("enableRules").checked = data.enableRules;
     }
   });
 
   document.getElementById("enableRules").addEventListener("change", (event) => {
-    chrome.storage.sync.set({ enableRules: event.target.checked });
-    updateIcon(event.target.checked);
+    chrome.storage.local.set({ enableRules: event.target.checked });
   });
 
   const textarea = document.getElementById("blockedPatterns");
 
   // Initial setup and check
-  chrome.storage.sync.get("blockedPatterns", (data) => {
+  chrome.storage.local.get("blockedPatterns", (data) => {
     if (data.blockedPatterns) {
       textarea.value = data.blockedPatterns;
     }
@@ -37,11 +36,11 @@ document.addEventListener("DOMContentLoaded", () => {
     timeout = setTimeout(() => {
       let patterns = textarea.value;
       textarea.value = patterns;
-      chrome.storage.sync.set({ blockedPatterns: patterns });
+      chrome.storage.local.set({ blockedPatterns: patterns });
     }, 1000); // 1 second delay
   });
 
-  chrome.storage.sync.get("maxTabs", (data) => {
+  chrome.storage.local.get("maxTabs", (data) => {
     if (data.maxTabs) {
       document.getElementById("maxTabsInput").value = data.maxTabs;
     }
@@ -49,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("maxTabsInput").addEventListener("input", () => {
     const maxTabsValue = document.getElementById("maxTabsInput").value;
-    chrome.storage.sync.set({ maxTabs: maxTabsValue });
+    chrome.storage.local.set({ maxTabs: maxTabsValue });
   });
 
   document.addEventListener("keydown", function (event) {
@@ -72,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       textarea.value = lines.join("\n");
       textarea.setSelectionRange(start, end);
-      chrome.storage.sync.set({ blockedPatterns: textarea.value });
+      chrome.storage.local.set({ blockedPatterns: textarea.value });
     }
   });
 
@@ -149,15 +148,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
-function updateIcon(isEnabled) {
-  const iconPath = isEnabled
-    ? "icons/terminal_activate.png"
-    : "icons/terminal_inactivate.png";
-
-  chrome.action.setIcon({
-    path: {
-      16: iconPath,
-    },
-  });
-}

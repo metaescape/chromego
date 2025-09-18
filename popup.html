@@ -6,23 +6,9 @@
   </head>
   <body>
     <div class="container">
-      <div class="rule-checkbox"">
-        <label for="enableRules" style="user-select: none">Enable Rules</label>
-        <input
-          type="checkbox"
-          id="enableRules"
-          checked
-        />
-      </div>
-      <textarea
-        id="blockedPatterns"
-        placeholder="Enter patterns, one per line"
-      ></textarea>
-
-      <!-- New Section for Closed URLs -->
       <div class="closed-urls">
         <div class="maxTabsContainer">
-          <h2>Closed Tabs</h2>
+          <h3>Closed Tabs</h3>
           <input
             type="number"
             id="maxTabsInput"
@@ -30,9 +16,23 @@
             value="6"
           />
           <button id="clearAll">Clear All</button>
+          <div class="rule-checkbox"">
+            <label for="enableRules" style="user-select: none"><h3>Enable Rules</h3></label>
+            <input
+              type="checkbox"
+              id="enableRules"
+              checked
+            />
+          </div>
         </div>
         <div id="closedTabs"></div>
       </div>
+      <textarea
+        id="blockedPatterns"
+        placeholder="Enter patterns, one per line"
+      ></textarea>
+
+
     </div>
     <script type="module" src="popup.js"></script>
   </body>

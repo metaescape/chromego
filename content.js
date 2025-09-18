@@ -13,14 +13,16 @@ function autoCloseAlert(message, duration) {
   alertBox.style.top = "15%";
   alertBox.style.left = "50%";
   alertBox.style.transform = "translateX(-50%)";
-  alertBox.style.padding = "5px 10px";
-  alertBox.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+  alertBox.style.padding = "8px 16px";
+  alertBox.style.backgroundColor = "rgba(18, 22, 19, 0.8)";
   alertBox.style.maxWidth = "80%";
   alertBox.style.color = "#fff";
   alertBox.style.fontSize = "14px";
-  alertBox.style.borderRadius = "4px";
+  alertBox.style.borderRadius = "6px";
   alertBox.style.boxShadow = "0px 0px 10px rgba(0, 0, 0, 0.1)";
   alertBox.innerText = message;
+  // put on top of all elements
+  alertBox.style.zIndex = "99999";
   document.body.appendChild(alertBox);
 
   setTimeout(() => {
@@ -92,9 +94,7 @@ document.addEventListener("mouseup", (event) => {
 
 function hideTooltip(event) {
   const tooltip = document.getElementById("selection-tooltip");
-  // 检查工具提示是否存在
-  if (tooltip) {
-    // 隐藏工具提示
+  if (tooltip && !tooltip.contains(event.target)) {
     tooltip.style.display = "none";
   }
 }

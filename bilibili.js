@@ -53,7 +53,7 @@ const sections = {
 };
 
 // Apply existing settings to the current tab
-chrome.storage.sync.get(["enableRules"], function (result) {
+chrome.storage.local.get(["enableRules"], function (result) {
   const settings = result.bilibiliSettings || {};
   applySettings(settings);
 });
@@ -95,14 +95,14 @@ function injectStyles(css) {
 }
 
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "sync") {
+  if (area === "local") {
     applySettings(changes.enableRules ? changes.enableRules.newValue : false);
   }
 });
 
 // after dom loaded
 document.addEventListener("DOMContentLoaded", () => {
-  chrome.storage.sync.get(["enableRules"], function (result) {
+  chrome.storage.local.get(["enableRules"], function (result) {
     const settings = result.enableRules || false;
     applySettings(settings);
   });
