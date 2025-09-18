@@ -1,7 +1,16 @@
 import { isTimeInAllowedRange } from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Function to check if the current time is between 12 PM and 1 PM
+  chrome.storage.sync.get("enableRules", (data) => {
+    if (data.enableRules !== undefined) {
+      document.getElementById("enableRules").checked = data.enableRules;
+    }
+  });
+
+  document.getElementById("enableRules").addEventListener("change", (event) => {
+    chrome.storage.sync.set({ enableRules: event.target.checked });
+    updateIcon(event.target.checked);
+  });
 
   const textarea = document.getElementById("blockedPatterns");
 
@@ -41,16 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("maxTabsInput").addEventListener("input", () => {
     const maxTabsValue = document.getElementById("maxTabsInput").value;
     chrome.storage.sync.set({ maxTabs: maxTabsValue });
-  });
-
-  chrome.storage.sync.get("enableRules", (data) => {
-    if (data.enableRules !== undefined) {
-      document.getElementById("enableRules").checked = data.enableRules;
-    }
-  });
-
-  document.getElementById("enableRules").addEventListener("change", (event) => {
-    chrome.storage.sync.set({ enableRules: event.target.checked });
   });
 
   document.addEventListener("keydown", function (event) {
@@ -150,3 +149,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+function updateIcon(isEnabled) {
+  const iconPath = isEnabled
+    ? "icons/terminal_activate.png"
+    : "icons/terminal_inactivate.png";
+
+  chrome.action.setIcon({
+    path: {
+      16: iconPath,
+    },
+  });
+}

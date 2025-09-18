@@ -90,10 +90,15 @@ document.addEventListener("mouseup", (event) => {
   ); // 使用 once: true 确保事件监听器只执行一次
 });
 
-// 在用户点击其他地方时隐藏 tooltip
-document.addEventListener("mousedown", (event) => {
+function hideTooltip(event) {
   const tooltip = document.getElementById("selection-tooltip");
-  if (tooltip && !tooltip.contains(event.target)) {
+  // 检查工具提示是否存在
+  if (tooltip) {
+    // 隐藏工具提示
     tooltip.style.display = "none";
   }
-});
+}
+
+// 分别监听 mousedown 和 keydown 事件，隐藏 tooltip
+document.addEventListener("mousedown", hideTooltip);
+document.addEventListener("keydown", hideTooltip);
