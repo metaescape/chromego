@@ -117,10 +117,6 @@ chrome.commands.onCommand.addListener((command) => {
   }
 });
 
-chrome.action.onClicked.addListener(() => {
-  chrome.tabs.create({ url: chrome.runtime.getURL("options.html") });
-});
-
 let blockedPatternsRaw = "";
 let parsedBlockedPatterns = [];
 let currentTarget = "about:blank";
