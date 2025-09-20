@@ -7,6 +7,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  chrome.tabs.query({}, (tabs) => {
+    const tabCountElement = document.getElementById("tabCount");
+    if (tabCountElement) {
+      tabCountElement.textContent = tabs.length;
+    }
+  });
+
   document.getElementById("enableRules").addEventListener("change", (event) => {
     chrome.storage.local.set({ enableRules: event.target.checked });
   });
