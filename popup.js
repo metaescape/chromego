@@ -1,9 +1,11 @@
 import { isTimeInAllowedRange } from "./utils.js";
 
+let checkbox = document.getElementById("enableRules");
+
 document.addEventListener("DOMContentLoaded", () => {
   chrome.storage.local.get("enableRules", (data) => {
     if (data.enableRules !== undefined) {
-      document.getElementById("enableRules").checked = data.enableRules;
+      checkbox.checked = data.enableRules;
     }
   });
 
@@ -14,8 +16,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.getElementById("enableRules").addEventListener("change", (event) => {
-    chrome.storage.local.set({ enableRules: event.target.checked });
+  checkbox.addEventListener("change", (event) => {
+    const isChecked = event.target.checked;
+    chrome.storage.local.set({ enableRules: isChecked });
+
+    if (!isChecked) {
+      chrome.runtime.sendMessage({ action: "startAutoEnableTimer" });
+    } else {
+      // 如果手动开启了，告诉后台：取消闹钟
+      chrome.runtime.sendMessage({ action: "cancelTimer" });
+    }
   });
 
   const textarea = document.getElementById("blockedPatterns");

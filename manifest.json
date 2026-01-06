@@ -3,7 +3,14 @@
   "name": "Chromego",
   "version": "1.0",
   "description": "some keybindings for org mode utilities and url redirection, hide youtube and bilibili non-main frame cotent",
-  "permissions": ["activeTab", "storage", "scripting", "webNavigation", "tabs"],
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "webNavigation",
+    "tabs",
+    "alarms"
+  ],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js",

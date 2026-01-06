@@ -1,4 +1,4 @@
-import { isTimeInAllowedRange } from "./utils.js";
+import { sendToPython } from "./utils.js";
 let maxTabs = 10;
 let enableRules = false; // Default value, can be changed in options
 
@@ -59,6 +59,22 @@ chrome.tabs.onRemoved.addListener(function (tabId, removeInfo) {
   }
   if (tabId === currentActiveTabId) {
     currentActiveTabId = null;
+  }
+});
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === "startAutoEnableTimer") {
+    sendToPython("disable");
+    // 创建一个 5 分钟后的闹钟
+    chrome.alarms.create("enableRulesAlarm", { delayInMinutes: 3 });
+  } else if (message.action === "cancelTimer") {
+    chrome.alarms.clear("enableRulesAlarm");
+  }
+});
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === "enableRulesAlarm") {
+    chrome.storage.local.set({ enableRules: true });
   }
 });
 
@@ -184,6 +200,7 @@ function checkAndRedirect(details) {
   if (frameId == 0 && rule) {
     console.log("Matched rule:", rule, "for url:", details.url);
     if (enableRules) {
+      sendToPython("block");
       chrome.tabs.update(details.tabId, { url: rule.redirect });
     }
     // chrome.tabs.update(details.tabId, { url: rule.redirect });
