@@ -2,60 +2,21 @@
 
 // Define the sections and their respective CSS selectors
 const sections = {
-  bilibiliHome: [
-    ".bili-feed4-layout",
-    ".header-channel-fixed",
-    ".bili-footer",
-    ".international-footer",
-    ".bili-header",
+  noisy: [
+    ".Topstory-mainColumnCard",
+    ".AppHeader",
+    ".HotSearchCard",
+    ".SimilarQuestions-title",
+    ".SimilarQuestions-list",
+    "[data-za-index]:not([data-za-index='0'])",
+    ".Pc-word-new",
+    ".AuthorCard",
   ],
-  bilibiliSidebar: [
-    "#reco_list",
-    "#right-bottom-banner",
-    "#live_recommand_report",
-    ".pop-live-small-mode",
-    "#danmukuBox",
-    ".video-card-ad-small",
-    ".recommend-list-v1",
-    ".ad-report",
-    ".ad-floor-exp",
-  ],
-  bilibiliUpNext: [
-    ".bpx-player-ending-content",
-    ".bpx-player-ending-related",
-    ".bilibili-player-ending-panel-box-videos",
-  ],
-  bilibiliComments: [
-    "#comment",
-    ".bili-footer",
-    ".international-footer",
-    "#activity_vote",
-    ".inside-wrp",
-    "#commentapp",
-  ],
-  bilibiliSubscription: [
-    ".bili-dyn-list-tabs",
-    ".bili-dyn-list",
-    ".bili-footer",
-    ".international-footer",
-    ".bili-dyn-topic-box",
-    ".bili-dyn-up-list",
-  ],
-  bilibiliTrending: [
-    ".popular-container",
-    ".popular-video-container",
-    ".bili-footer",
-    ".international-footer",
-    // ".channel-link", // these 3 are the buttons in the header of hompage
-    // ".channel-link__right",
-    // ".channel-entry-more__link",
-  ],
-  // bilibiliDanmuku: [".bpx-player-row-dm-wrap"],
 };
 
 // Apply existing settings to the current tab
 chrome.storage.local.get(["enableRules"], function (result) {
-  const settings = result.enableRules || {};
+  const settings = result.bilibiliSettings || {};
   applySettings(settings);
 });
 

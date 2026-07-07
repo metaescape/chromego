@@ -27,6 +27,16 @@
       "run_at": "document_start"
     },
     {
+      "matches": ["*://*.zhihu.com/*"],
+      "js": ["zhihu.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["*://*.douyin.com/*"],
+      "js": ["douyin.js"],
+      "run_at": "document_start"
+    },
+    {
       "all_frames": true,
       "matches": ["https://www.youtube.com/*", "https://m.youtube.com/*"],
       "css": ["youtube.css"],

@@ -66,7 +66,7 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message.action === "startAutoEnableTimer") {
     sendToPython("disable");
     // 创建一个 5 分钟后的闹钟
-    chrome.alarms.create("enableRulesAlarm", { delayInMinutes: 3 });
+    chrome.alarms.create("enableRulesAlarm", { delayInMinutes: 0.5 });
   } else if (message.action === "cancelTimer") {
     chrome.alarms.clear("enableRulesAlarm");
   }
@@ -98,7 +98,7 @@ chrome.commands.onCommand.addListener((command) => {
             text: `[[${data.url}][${data.title}]]`,
             copy: true,
           });
-        }
+        },
       );
     });
   } else if (command === "enable_rule") {
@@ -153,7 +153,7 @@ function parseBlockedPatterns(rawPatterns) {
     .map((pattern) => {
       const [patternStr, redirectUrl] = pattern
         .split("->")
-        .map((str) => str.trim());
+        .map((str) => str.trim().replace(/^#\s*/, ""));
       const targetUrl = getAbsoluteUrl(redirectUrl) ?? currentTarget;
       currentTarget = targetUrl;
       return {
@@ -200,7 +200,7 @@ function checkAndRedirect(details) {
   if (frameId == 0 && rule) {
     console.log("Matched rule:", rule, "for url:", details.url);
     if (enableRules) {
-      sendToPython("block");
+      // sendToPython(details.url);
       chrome.tabs.update(details.tabId, { url: rule.redirect });
     }
     // chrome.tabs.update(details.tabId, { url: rule.redirect });
@@ -241,7 +241,7 @@ chrome.webNavigation.onBeforeNavigate.addListener(
               chrome.storage.local.get({ closedUrls: [] }, (data) => {
                 const closedUrls = data.closedUrls;
                 const existingIndex = closedUrls.findIndex(
-                  (item) => item.url === details.url
+                  (item) => item.url === details.url,
                 );
                 const timestamp = Date.now();
 
@@ -260,12 +260,12 @@ chrome.webNavigation.onBeforeNavigate.addListener(
                 text: `已超过 ${maxTabs} 个标签页。关闭的链接: ${details.url}`,
               });
             }
-          }
+          },
         );
       }
     });
   },
-  { url: [{ urlMatches: ".*" }] }
+  { url: [{ urlMatches: ".*" }] },
 );
 
 function updateIcon(isEnabled) {

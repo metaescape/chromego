@@ -9,6 +9,7 @@ html[hide="true"]
   .ytp-next-button,
 /* html[hide="true"] #actions.ytd-watch-metadata,
 html[hide="true"] #info > #menu-container, */
+html[hide="true"] .ytSearchboxComponentInputContainer,
 html[hide="true"] .ytp-ce-element,
 html[hide="true"] #owner.ytd-watch-metadata,
 html[hide="true"] #top-row.ytd-video-secondary-info-renderer,
@@ -99,8 +100,8 @@ html[hide="true"] ytd-video-primary-info-renderer {
 html[hide="true"]
   ytd-watch-flexy[flexy][is-two-columns_]:not([fullscreen]):not([theater]) {
   --ytd-watch-flexy-max-player-width: calc(
-    var(--ytd-watch-flexy-chat-max-height) * var(--ytd-watch-flexy-width-ratio) /
-      var(--ytd-watch-flexy-height-ratio)
+    var(--ytd-watch-flexy-chat-max-height) *
+      var(--ytd-watch-flexy-width-ratio) / var(--ytd-watch-flexy-height-ratio)
   ) !important;
 }
 #content > #page-manager.ytd-app {
