@@ -37,6 +37,11 @@
       "run_at": "document_start"
     },
     {
+      "matches": ["*://*.baidu.com/*"],
+      "js": ["baidu.js"],
+      "run_at": "document_start"
+    },
+    {
       "all_frames": true,
       "matches": ["https://www.youtube.com/*", "https://m.youtube.com/*"],
       "css": ["youtube.css"],

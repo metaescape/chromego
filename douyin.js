@@ -2,7 +2,7 @@
 
 // Define the sections and their respective CSS selectors
 const sections = {
-  douyin: ["#douyin-navigation"],
+  douyin: ["#douyin-navigation", "#douyin-header"],
 };
 
 // Apply existing settings to the current tab
