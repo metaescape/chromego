@@ -279,3 +279,88 @@ function updateIcon(isEnabled) {
     },
   });
 }
+
+// ==================== 从注释行解析跟踪模式并计数 ====================
+const TRACK_WINDOW_MS = 2 * 60 * 60 * 1000; // 2小时
+const MAX_TRACK_COUNT = 5;
+const TRACK_STORAGE_KEY = "trackedVisitQueues";
+
+/**
+ * 从原始 blockedPatterns 文本中提取注释行（以 # 开头）作为跟踪模式
+ * 每行格式：`# 正则表达式` 或 `# 正则表达式 -> 任意内容`（重定向部分忽略）
+ * 返回数组：{ regex: RegExp, patternStr: string }[]
+ */
+function parseTrackedPatternsFromRaw(raw) {
+  const patterns = [];
+  if (!raw) return patterns;
+  raw
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith("#"))
+    .forEach((line) => {
+      // 去掉开头的 # 和可能的空格
+      let cleaned = line.replace(/^#\s*/, "");
+      // 如果包含 '->'，只取前面的部分
+      if (cleaned.includes("->")) {
+        cleaned = cleaned.split("->")[0].trim();
+      }
+      if (cleaned === "") return;
+      try {
+        const regex = new RegExp(cleaned);
+        patterns.push({
+          regex: regex,
+          patternStr: cleaned, // 用作存储键
+        });
+      } catch (e) {
+        console.warn("[跟踪] 无效正则表达式，已忽略:", cleaned, e);
+      }
+    });
+  return patterns;
+}
+
+/**
+ * 对每个匹配的 URL，更新该模式的访问队列（仅保留2小时内），并检查是否达到阈值
+ */
+function checkAndTrack(url) {
+  const trackedPatterns = parseTrackedPatternsFromRaw(blockedPatternsRaw);
+  if (trackedPatterns.length === 0) return;
+
+  // 找到第一个匹配的模式
+  let matched = null;
+  for (const p of trackedPatterns) {
+    if (p.regex.test(url)) {
+      matched = p;
+      break;
+    }
+  }
+  if (!matched) return;
+
+  const patternKey = matched.patternStr;
+  const now = Date.now();
+
+  chrome.storage.local.get(TRACK_STORAGE_KEY, (result) => {
+    const allQueues = result[TRACK_STORAGE_KEY] || {};
+    let queue = allQueues[patternKey] || [];
+
+    // 过滤掉超过2小时的旧记录
+    queue = queue.filter((t) => now - t <= TRACK_WINDOW_MS);
+    // 加入当前访问时间
+    queue.push(now);
+
+    const count = queue.length;
+    if (count >= MAX_TRACK_COUNT) {
+      sendToPython(`[提醒] 模式 ${patternKey} 在 2 小时内访问达到 ${count} 次`);
+    }
+
+    // 保存队列（不清除，保留所有2小时内的记录）
+    allQueues[patternKey] = queue;
+    chrome.storage.local.set({ [TRACK_STORAGE_KEY]: allQueues });
+  });
+}
+
+// 监听导航完成事件（仅主框架），用于跟踪计数
+chrome.webNavigation.onCompleted.addListener((details) => {
+  if (details.frameType === "outermost_frame") {
+    checkAndTrack(details.url);
+  }
+});
